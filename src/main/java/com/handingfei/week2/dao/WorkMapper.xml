@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.handingfei.week2.dao.WorkMapper">
+	
+	<resultMap type="work" id="workResultBase">
+		<id column="id" property="id"/>
+		<result column="keywords" property="keywords"/>
+		<result column="description" property="description"/>
+		<result column="name" property="name"/>
+		<result column="cp" property="cp"/>
+		<result column="address" property="address"/>
+		<result column="money" property="money"/>
+		<result column="created" property="created"/>
+		<result column="year" property="year"/>
+		<result column="yeartype" property="yeartype"/>
+		<result column="being" property="being"/>
+	</resultMap>
+	
+	<select id="selects" resultMap="workResultBase">
+		select * from work
+		<where>
+			<if test="mohu!=null and ''!=mohu">
+				and id like "%"#{mohu}"%"
+			</if>
+			<if test="keywords1!=null and ''!=keywords1">
+				and keywords like "%"#{keywords1}"%"
+			</if>
+			<if test="description1!=null and ''!=description1">
+				and description like "%"#{description1}"%"
+			</if>
+			<if test="name1!=null and ''!=name1">
+				and name like "%"#{name1}"%"
+			</if>
+			<if test="cp1!=null and ''!=cp1">
+				and cp like "%"#{cp1}"%"
+			</if>
+			<if test="address1!=null and ''!=address1">
+				and address like "%"#{address1}"%"
+			</if>
+			
+			<!-- 注册资本范围查询 -->
+			<if test="startmoney!=null and ''!=startmoney">
+				and money >= #{startmoney}
+			</if>
+			<if test="endmoney!=null and ''!=endmoney">
+				and money &lt;= #{endmoney}
+			</if>
+			
+			<!-- 成立时间范围查询 -->
+			<if test="startcreated!=null and ''!=startcreated">
+				and created >= #{startcreated}
+			</if>
+			<if test="endcreated!=null and ''!=endcreated">
+				and created &lt;= #{endcreated}
+			</if>
+			
+			<!-- 年检日期范围查询 -->
+			<if test="startyeartype!=null and ''!=startyeartype">
+				and year >= #{startyeartype}
+			</if>
+			<if test="endyeartype!=null and ''!=endyeartype">
+				and year &lt;= #{endyeartype}
+			</if>
+			
+		</where>
+	</select>
+	
+	<insert id="insertBatch">
+		insert into work(id,keywords,description,name,cp,address,money,
+		created,year,yeartype,being) values
+		<foreach collection="list" separator="," item="e">
+			(#{e.id},#{e.keywords},#{e.description},#{e.name},#{e.cp},
+			#{e.address},#{e.money},#{e.created},#{e.year},#{e.yeartype},
+			#{e.being})
+		</foreach>
+	</insert>
+	
+	<update id="insert">
+		update work set yeartype=#{yeartype} where id=#{id}
+	</update>
+	
+	<select id="selectbywork">
+		select * from work where id=#{id}
+	</select>
+	
+</mapper>
